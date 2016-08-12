@@ -8,6 +8,7 @@
 
 #import "LocationService.h"
 
+
 @implementation LocationService
 
 + (CLLocationManager *)sharedLocationManager {
@@ -24,12 +25,37 @@
   return _locationManager;
 }
 
+static LocationService *singletonObject = nil;
+
++ (LocationService*) sharedLocationService
+{
+  if (! singletonObject) {
+    
+    singletonObject = [[LocationService alloc] init];
+  }
+  return singletonObject;
+}
+
+- (id)init
+{
+  if (! singletonObject) {
+    
+    singletonObject = [super init];
+
+  }
+  return singletonObject;
+}
+
 
 -(void)startLocationService:(NSString*) userId cookie:(NSString*)cookie
-                  channelId:(NSString*)channelId {
+                  channelId:(NSString*)channelId
+                       name:(NSString*)name logo: (NSString*)logo{
+  
   self.userId = userId;
-  self.cookie = @"jeff001##1502325216770##649f40d0a73936fa0593a29b2db306e19012a7a4";
+  self.cookie = cookie;
   self.channelId = channelId;
+  self.name = name;
+  self.logo = logo;
   
   NSURL* url = [[NSURL alloc] initWithString:@"https://www.topichat.com:3333"];
   self.socketio = [[SocketIOClient alloc] initWithSocketURL:url options:@{@"log": @YES, @"forceWebsockets": @YES,
@@ -77,15 +103,20 @@
                                                        selector:@selector(updateLocation) userInfo:nil repeats:YES];
     
   });
+  self.inService = TRUE;
+  
 }
 
 -(void)stopLocationService {
   dispatch_async( dispatch_get_main_queue(), ^{
+    
     [self.socketio disconnect];
     [self.silenceTimer invalidate];
     self.silenceTimer = nil;
     
     [[UIApplication sharedApplication] endBackgroundTask:UIBackgroundTaskInvalid];
+  
+    self.inService = FALSE;
   });
 }
 
@@ -104,10 +135,10 @@
     NSLog(@"latitude:%@", self.latitude);
     NSLog(@"longitude: %@ ", self.longitude);
   
-   [self.socketio emit:@"reply GPS" withItems:@[@{@"channelId": @"6aff2d40-53ab-11e6-9555-f6284ea49312",
-   @"author":@{@"id":@"zhendong",
-   @"name":@"zhengdong",
-   @"logo":@""},
+   [self.socketio emit:@"reply GPS" withItems:@[@{@"channelId": self.channelId,
+   @"author":@{@"id":self.userId,
+   @"name":self.name,
+   @"logo":self.logo},
    @"content":@{@"latitude":self.latitude,
    @"longitude":self.longitude
    }

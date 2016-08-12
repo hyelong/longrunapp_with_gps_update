@@ -11,7 +11,7 @@
 
 @interface RCT_EXTERN_MODULE(LocationService, NSObject)
 
-RCT_EXTERN_METHOD(startLocationService:(NSString*) userId cookie:(NSString*)cookie channelId:(NSString*)channelId)
+RCT_EXTERN_METHOD(startLocationService:(NSString*) userId cookie:(NSString*)cookie channelId:(NSString*)channelId name:(NSString*)name logo: (NSString*)logo )
 RCT_EXTERN_METHOD(stopLocationService)
 
 

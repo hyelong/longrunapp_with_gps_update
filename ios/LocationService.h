@@ -24,15 +24,24 @@
 
 @property (nonatomic, retain) NSString *cookie;
 
+@property (nonatomic, retain) NSString *name;
+
+@property (nonatomic, retain) NSString *logo;
+
 @property (nonatomic) NSTimeInterval *interval;
 
 @property (nonatomic, retain) NSString *latitude;
 
 @property (nonatomic, retain) NSString *longitude;
 
+@property (nonatomic) Boolean inService;
+
++ (LocationService *) sharedLocationService;
+
 + (CLLocationManager *)sharedLocationManager;
 
-- (void)startLocationService:(NSString*) userId cookie:(NSString*)cookie channelId:(NSString*)channelId ;
+- (void)startLocationService:(NSString*) userId cookie:(NSString*)cookie channelId:(NSString*)channelId
+                        name:(NSString*)name logo: (NSString*)logo ;
 
 - (void)stopLocationService;
 

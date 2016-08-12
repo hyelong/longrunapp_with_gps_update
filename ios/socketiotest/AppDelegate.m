@@ -11,6 +11,7 @@
 
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
+#import "LocationService.h"
 
 
 @implementation AppDelegate
@@ -55,16 +56,22 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
   // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
   // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-  self.notification = [[UILocalNotification alloc] init];
-  self.notification.fireDate = [NSDate date];
-  self.notification.alertBody = @"Topichat is using gps location!";
-  [[UIApplication sharedApplication] scheduleLocalNotification:self.notification];
+  if(LocationService.sharedLocationService.inService){
+    self.notification = [[UILocalNotification alloc] init];
+    self.notification.fireDate = [NSDate date];
+    self.notification.alertBody = @"Topichat is using gps location!";
+    [[UIApplication sharedApplication] scheduleLocalNotification:self.notification];
+  }
+  
   
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
   // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-  [[UIApplication sharedApplication] cancelLocalNotification:self.notification];
+  if(LocationService.sharedLocationService.inService && self.notification!=nil){
+    [[UIApplication sharedApplication] cancelLocalNotification:self.notification];
+  }
+  
 }
 
 
