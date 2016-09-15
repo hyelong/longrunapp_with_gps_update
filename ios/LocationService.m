@@ -50,6 +50,9 @@ static LocationService *singletonObject = nil;
 -(void)startLocationService:(NSString*) userId cookie:(NSString*)cookie
                   channelId:(NSString*)channelId
                        name:(NSString*)name logo: (NSString*)logo{
+                       
+  CLLocationManager *locationManager = [LocationService sharedLocationManager];
+  [locationManager requestAlwaysAuthorization] 
   
   self.userId = userId;
   self.cookie = cookie;
